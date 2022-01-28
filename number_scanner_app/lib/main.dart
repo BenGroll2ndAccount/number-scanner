@@ -14,7 +14,7 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    api.getSoapResponseTest(context);
+    //api.getSoapResponseTest(context);
     return MaterialApp(
       title: st.appname,
       theme: ThemeData(
