@@ -11,10 +11,10 @@ dynamic getSoapResponseTest(context) async {
   if(output){
   print('Response status: ${response.statusCode}');}
   var rb = response.body;
-  var ass = rb.split("\n");
+  var lines = rb.split("\n");
   if(output){
   for(int i = 0; i < ass.length; i++) {
-    print(ass[i]);
+    print(lines[i]);
   }
   }
    
