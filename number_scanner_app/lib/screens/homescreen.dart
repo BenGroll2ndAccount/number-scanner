@@ -10,7 +10,6 @@ import 'package:number_scanner_app/screens/scanscreens/qrhomescreen.dart';
 import 'package:number_scanner_app/screens/scanscreens/eanhomescreen.dart';
 import 'package:number_scanner_app/screens/scanscreens/mpnhomescreen.dart';
 import 'dart:convert';
-import 'package:number_scanner_app/static/fakeresponse.dart';
 
 
 
@@ -22,7 +21,7 @@ class HOMESCREEN extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(title: st.getAppText(context), elevation: 3.0, backgroundColor: Colors.white, centerTitle: true,),
+      appBar: AppBar(title: st.getAppText(context), elevation: 3.0, backgroundColor: Colors.white, centerTitle: true),
       body: Padding(
         padding: const EdgeInsets.all(20),
         child: Center(
@@ -36,16 +35,16 @@ class HOMESCREEN extends StatelessWidget {
                 children: [
                   wt.NumberSelectButton(callback: () {
                     Navigator.of(context).push(MaterialPageRoute(builder: (context) => const SN_HOMESCREEN()));
-                  }, label: "SN", active: true,),
+                  }, label: "SN", active: false),
                   wt.NumberSelectButton(callback: () {
                     Navigator.of(context).push(MaterialPageRoute(builder: (context) => const EAN_HOMESCREEN()));
-                  }, label: "EAN", active: true),
+                  }, label: "EAN", active: false),
                   wt.NumberSelectButton(callback: () {
                     Navigator.of(context).push(MaterialPageRoute(builder: (context) => SKU_HOMESCREEN()));
                   }, label: "SKU", active: true),
                   wt.NumberSelectButton(callback: () {
                     Navigator.of(context).push(MaterialPageRoute(builder: (context) => const MPN_HOMESCREEN()));
-                  }, label: "MPN", active: true),
+                  }, label: "MPN", active: false),
                 ],
               ),
               const SizedBox(height: 60),
@@ -55,7 +54,7 @@ class HOMESCREEN extends StatelessWidget {
                 children: [
                   wt.NumberSelectButton(callback: () {
                     Navigator.of(context).push(MaterialPageRoute(builder: (context) => const QR_HOMESCREEN()));
-                  }, label: "QR", active: true)
+                  }, label: "QR", active: false)
                 ],
               )
             ],
