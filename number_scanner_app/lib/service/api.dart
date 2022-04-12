@@ -1,6 +1,5 @@
 import 'dart:convert';
-import 'dart:io';
-
+import 'package:flutter/foundation.dart' show kIsWeb;
 import "package:flutter/material.dart";
 import 'package:requests/requests.dart';
 import 'package:http/http.dart' as http;
@@ -39,16 +38,29 @@ List<ItemEntry> buildentrys(Map<String, dynamic> data) {
 
 
 Future<Map<String, dynamic>> getSoapResponseTestSKU(String? sku) async {
-  String url = "https://dev2.promusictools.com/pctool";
+  String url = "www.promusictools.com/pctool";
   String username = "promusictools";
   String password = "developer";
   String basicAuth = "Basic " + base64Encode(utf8.encode("$username:$password"));
   print("Request status: Started");
   var request = http.get(
-    "https://dev2.promusictools.com/pctool?ysS2O=Sjdasdn&sku=$sku",
-    headers: {
-      "authorization" : basicAuth,
-    }
+    "$url?ysS2O=Sjdasdn&sku=$sku",
+  );
+  print("Requests Status: Waiting");
+  Map<String, dynamic> body = await request.then((value) {
+    print(value.statusCode);
+    print(value.body);
+    return jsonDecode(value.body);});
+  return body;
+}
+Future<Map<String, dynamic>> getSoapResponseTestSN(String? sn) async {
+  String url = "www.promusictools.com/pctool";
+  String username = "promusictools";
+  String password = "developer";
+  String basicAuth = "Basic " + base64Encode(utf8.encode("$username:$password"));
+  print("Request status: Started");
+  var request = http.get(
+    "$url?ysS2O=Sjdasdn&serial=$sn",
   );
   print("Requests Status: Waiting");
   dynamic dasdasd = await request;
@@ -59,8 +71,46 @@ Future<Map<String, dynamic>> getSoapResponseTestSKU(String? sku) async {
   return body;
 }
 
-List<ResultCard> buildCardsFromEntrys(List<ItemEntry> entrys) {
-  List<ResultCard> returnlist = [];
+Future<Map<String, dynamic>> getSoapResponseTestEAN(String? ean) async {
+  String url = "www.promusictools.com/pctool";
+  String username = "promusictools";
+  String password = "developer";
+  String basicAuth = "Basic " + base64Encode(utf8.encode("$username:$password"));
+  print("Request status: Started");
+  var request = http.get(
+    "$url?ysS2O=Sjdasdn&ea=$ean",
+    
+  );
+  print("Requests Status: Waiting");
+  dynamic dasdasd = await request;
+  print(dasdasd.runtimeType);
+  Map<String, dynamic> body = await request.then((value) {
+    print(jsonDecode(value.body));
+    return jsonDecode(value.body);});
+  return body;
+}
+
+Future<Map<String, dynamic>> getSoapResponseTestMPN(String? mpn) async {
+  String url = "www.promusictools.com/pctool";
+  String username = "promusictools";
+  String password = "developer";
+  String basicAuth = "Basic " + base64Encode(utf8.encode("$username:$password"));
+  print("Request status: Started");
+  var request = http.get(
+    "$url?ysS2O=Sjdasdn&mpn=$mpn",
+
+  );
+  print("Requests Status: Waiting");
+  dynamic dasdasd = await request;
+  print(dasdasd.runtimeType);
+  Map<String, dynamic> body = await request.then((value) {
+    print(jsonDecode(value.body));
+    return jsonDecode(value.body);});
+  return body;
+}
+
+List<Widget> buildCardsFromEntrys(List<ItemEntry> entrys) {
+  List<Widget> returnlist = [];
   for(int i = 0; i < entrys.length; i++) {
     ItemEntry entry = entrys[i];
     ResultCard widget = ResultCard(
@@ -74,11 +124,32 @@ List<ResultCard> buildCardsFromEntrys(List<ItemEntry> entrys) {
     );
     returnlist.add(widget);
   }
+  if (returnlist.isEmpty) {
+    returnlist.add(const Text("No Items match the entered filter(s)."));
+  }
   return returnlist;
 }
 
 Future<List<Widget>> get_via_sku(String? sku) async {
   Map<String, dynamic> data = await getSoapResponseTestSKU(sku);
+  List<ItemEntry> items = buildentrys(data);
+  return buildCardsFromEntrys(items);
+}
+
+Future<List<Widget>> get_via_sn(String? sn) async {
+  Map<String, dynamic> data = await getSoapResponseTestSN(sn);
+  List<ItemEntry> items = buildentrys(data);
+  return buildCardsFromEntrys(items);
+}
+
+Future<List<Widget>> get_via_ean(String? ean) async {
+  Map<String, dynamic> data = await getSoapResponseTestEAN(ean);
+  List<ItemEntry> items = buildentrys(data);
+  return buildCardsFromEntrys(items);
+}
+
+Future<List<Widget>> get_via_mpn(String? mpn) async {
+  Map<String, dynamic> data = await getSoapResponseTestMPN(mpn);
   List<ItemEntry> items = buildentrys(data);
   return buildCardsFromEntrys(items);
 }
@@ -133,8 +204,9 @@ class ResultCard extends StatelessWidget {
                   placeholder: kTransparentImage,
                   image : small_image_link
                   ),
-                Text("MPN : $mpn", style: TextStyle(fontSize: MediaQuery.of(context).size.height / 50)),
-                Text("EAN: $ean", style: TextStyle(fontSize: MediaQuery.of(context).size.height / 50)),
+
+                Text("MPN : $mpn", style: TextStyle(fontSize:(kIsWeb ? MediaQuery.of(context).size.height / 100: MediaQuery.of(context).size.width) / 50)),
+                Text("EAN: $ean", style: TextStyle(fontSize:(kIsWeb ? MediaQuery.of(context).size.height / 100: MediaQuery.of(context).size.width) / 50)),
                 ]
             )
           )
@@ -166,7 +238,7 @@ class ResultCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(name, style: TextStyle(fontSize: 20.0),),
-                SizedBox(height: MediaQuery.of(context).size.height / 60),
+                SizedBox(height: (kIsWeb ? MediaQuery.of(context).size.height / 50: MediaQuery.of(context).size.width) / 50),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.end,

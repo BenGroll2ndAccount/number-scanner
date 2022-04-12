@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 class NumberSelectButton extends StatelessWidget {
   final dynamic callback;
@@ -19,7 +20,7 @@ class NumberSelectButton extends StatelessWidget {
         padding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.05),
         child: Text(
           label,
-          style: TextStyle(fontWeight: FontWeight.bold, color: active ? Colors.blue[400] : Colors.grey[700], fontSize: MediaQuery.of(context).size.width / 15, decoration: !active ? TextDecoration.lineThrough : null),
+          style: TextStyle(fontWeight: FontWeight.bold, color: active ? Colors.blue[400] : Colors.grey[700], fontSize: (kIsWeb ? MediaQuery.of(context).size.width / 30 : MediaQuery.of(context).size.height / 15), decoration: !active ? TextDecoration.lineThrough : null),
         ),
       )
       );

@@ -34,17 +34,17 @@ class HOMESCREEN extends StatelessWidget {
                 runSpacing: 30,
                 children: [
                   wt.NumberSelectButton(callback: () {
-                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => const SN_HOMESCREEN()));
-                  }, label: "SN", active: false),
+                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => SN_HOMESCREEN()));
+                  }, label: "SN", active: true),
                   wt.NumberSelectButton(callback: () {
-                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => const EAN_HOMESCREEN()));
-                  }, label: "EAN", active: false),
+                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => EAN_HOMESCREEN()));
+                  }, label: "EAN", active: true),
                   wt.NumberSelectButton(callback: () {
                     Navigator.of(context).push(MaterialPageRoute(builder: (context) => SKU_HOMESCREEN()));
                   }, label: "SKU", active: true),
                   wt.NumberSelectButton(callback: () {
-                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => const MPN_HOMESCREEN()));
-                  }, label: "MPN", active: false),
+                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => MPN_HOMESCREEN()));
+                  }, label: "MPN", active: true),
                 ],
               ),
               const SizedBox(height: 60),
