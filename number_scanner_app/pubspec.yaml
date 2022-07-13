@@ -38,6 +38,7 @@ dependencies:
   flutter_spinkit:
   url_launcher: ^6.0.20
   transparent_image: 
+  auto_size_text: 3.0.0
 
 dev_dependencies:
   flutter_test:

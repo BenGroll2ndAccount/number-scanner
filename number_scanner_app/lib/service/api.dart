@@ -5,6 +5,7 @@ import 'package:requests/requests.dart';
 import 'package:http/http.dart' as http;
 import 'package:transparent_image/transparent_image.dart';
 import 'package:url_launcher/url_launcher.dart' as url;
+import 'package:auto_size_text/auto_size_text.dart';
 
 class ItemEntry {
   final String name;
@@ -247,9 +248,8 @@ class ResultCard extends StatelessWidget {
             title: const Text("Hidden Info"),
             content: Column(
               children : [
-               
-                Text("MPN : $mpn", style: TextStyle(fontSize:(kIsWeb ? MediaQuery.of(context).size.height / 100: MediaQuery.of(context).size.width) / 50)),
-                Text("EAN: $ean", style: TextStyle(fontSize:(kIsWeb ? MediaQuery.of(context).size.height / 100: MediaQuery.of(context).size.width) / 50)),
+                AutoSizeText("MPN : $mpn", maxLines: 2,),
+                Text("EAN: $ean", maxLines: 2),
                 ]
             )
           )
@@ -294,14 +294,14 @@ class ResultCard extends StatelessWidget {
                           children: [
                             Icon(Icons.info, color: Colors.grey[800]),
                             Text(condition),
-                            Text("QTY: $qty")
                           ],
                         ),
-                       
+                        AutoSizeText("$qty")
+
                       ],
                     ),
                     const Expanded(child: SizedBox()),
-                    Text(saleprice.toString() + "€", style: const TextStyle(color: Colors.red))
+                    AutoSizeText(saleprice.toString() + "€", style: const TextStyle(color: Colors.red), maxLines: 1,)
                   ],
                 )
               ],)),
