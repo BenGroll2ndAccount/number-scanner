@@ -14,7 +14,8 @@ class ItemEntry {
   final String mpn;
   final String ean;
   final String small_image_link;
-  ItemEntry({this.name = "-", this.price = -1, this.link = "", this.condition = "None", this.mpn = "", this.ean = "", this.small_image_link = ""});
+  final int qty;
+  ItemEntry({this.name = "-", this.price = -1, this.link = "", this.condition = "None", this.mpn = "", this.ean = "", this.small_image_link = "", this.qty = 0});
 }
 
 List<ItemEntry> buildentrys(Map<String, dynamic> data) {
@@ -28,7 +29,8 @@ List<ItemEntry> buildentrys(Map<String, dynamic> data) {
       condition: this_entry_data["condition_value"],
       mpn: this_entry_data["mpn"],
       ean: this_entry_data["ean"],
-      small_image_link: this_entry_data["small_image"]
+      small_image_link: this_entry_data["small_image"],
+      qty: this_entry_data["qty"]
     );
     returnlist.add(entry);
     print(entry.small_image_link);
@@ -43,15 +45,19 @@ Future<Map<String, dynamic>> getSoapResponseTestSKU(String? sku) async {
   String password = "developer";
   String basicAuth = "Basic " + base64Encode(utf8.encode("$username:$password"));
   print("Request status: Started");
+  try {
   var request = http.get(
     "$url?ysS2O=Sjdasdn&sku=$sku",
   );
-  print("Requests Status: Waiting");
+  //try {
   Map<String, dynamic> body = await request.then((value) {
-    print(value.statusCode);
-    print(value.body);
     return jsonDecode(value.body);});
   return body;
+  } catch(e) {
+    return {"exception" : e};
+  }
+
+  
 }
 Future<Map<String, dynamic>> getSoapResponseTestSN(String? sn) async {
   String url = "www.promusictools.com/pctool";
@@ -59,6 +65,7 @@ Future<Map<String, dynamic>> getSoapResponseTestSN(String? sn) async {
   String password = "developer";
   String basicAuth = "Basic " + base64Encode(utf8.encode("$username:$password"));
   print("Request status: Started");
+  try {
   var request = http.get(
     "$url?ysS2O=Sjdasdn&serial=$sn",
   );
@@ -69,16 +76,20 @@ Future<Map<String, dynamic>> getSoapResponseTestSN(String? sn) async {
     print(jsonDecode(value.body));
     return jsonDecode(value.body);});
   return body;
+  }catch(e){
+    return {"exception" : e};
+  }
 }
 
 Future<Map<String, dynamic>> getSoapResponseTestEAN(String? ean) async {
+  try {
   String url = "www.promusictools.com/pctool";
   String username = "promusictools";
   String password = "developer";
   String basicAuth = "Basic " + base64Encode(utf8.encode("$username:$password"));
   print("Request status: Started");
   var request = http.get(
-    "$url?ysS2O=Sjdasdn&ea=$ean",
+    "$url?ysS2O=Sjdasdn&ean=$ean",
     
   );
   print("Requests Status: Waiting");
@@ -88,6 +99,9 @@ Future<Map<String, dynamic>> getSoapResponseTestEAN(String? ean) async {
     print(jsonDecode(value.body));
     return jsonDecode(value.body);});
   return body;
+  } catch(e) {
+    return {"exception" : e};
+  }
 }
 
 Future<Map<String, dynamic>> getSoapResponseTestMPN(String? mpn) async {
@@ -96,6 +110,7 @@ Future<Map<String, dynamic>> getSoapResponseTestMPN(String? mpn) async {
   String password = "developer";
   String basicAuth = "Basic " + base64Encode(utf8.encode("$username:$password"));
   print("Request status: Started");
+  try {
   var request = http.get(
     "$url?ysS2O=Sjdasdn&mpn=$mpn",
 
@@ -107,6 +122,9 @@ Future<Map<String, dynamic>> getSoapResponseTestMPN(String? mpn) async {
     print(jsonDecode(value.body));
     return jsonDecode(value.body);});
   return body;
+  } catch(e) {
+    return {"exception" : e};
+  }
 }
 
 List<Widget> buildCardsFromEntrys(List<ItemEntry> entrys) {
@@ -132,26 +150,54 @@ List<Widget> buildCardsFromEntrys(List<ItemEntry> entrys) {
 
 Future<List<Widget>> get_via_sku(String? sku) async {
   Map<String, dynamic> data = await getSoapResponseTestSKU(sku);
+  if (data.keys.contains("exception")) {
+    return [const Text("Etwas ist schiefgelaufen."), const Text("Für den Admin: "), const Text("Exception caught in getSoapResponseTestSKU"), Text(data["exception"].toString())];
+  }
   List<ItemEntry> items = buildentrys(data);
+  try {
   return buildCardsFromEntrys(items);
+  } catch(e) {
+    return [const Text("Etwas ist schiefgelaufen."), const Text("Für den Admin: "), Text(e.toString())];
+  }
 }
 
 Future<List<Widget>> get_via_sn(String? sn) async {
   Map<String, dynamic> data = await getSoapResponseTestSN(sn);
+  if (data.keys.contains("exception")) {
+    return [const Text("Etwas ist schiefgelaufen."), const Text("Für den Admin: "), const Text("Exception caught in getSoapResponseTestSN"), Text(data["exception"].toString())];
+  }
   List<ItemEntry> items = buildentrys(data);
+  try {
   return buildCardsFromEntrys(items);
+  } catch(e) {
+    return [const Text("Etwas ist schiefgelaufen."), const Text("Für den Admin: "), Text(e.toString())];
+  }
 }
 
 Future<List<Widget>> get_via_ean(String? ean) async {
   Map<String, dynamic> data = await getSoapResponseTestEAN(ean);
+  if (data.keys.contains("exception")) {
+    return [const Text("Etwas ist schiefgelaufen."), const Text("Für den Admin: "), const Text("Exception caught in getSoapResponseTestSN"), Text(data["exception"].toString())];
+  }
   List<ItemEntry> items = buildentrys(data);
+  try {
   return buildCardsFromEntrys(items);
+  } catch(e) {
+    return [const Text("Etwas ist schiefgelaufen."), const Text("Für den Admin: "), Text(e.toString())];
+  }
 }
 
 Future<List<Widget>> get_via_mpn(String? mpn) async {
   Map<String, dynamic> data = await getSoapResponseTestMPN(mpn);
+  if (data.keys.contains("exception")) {
+    return [const Text("Etwas ist schiefgelaufen."), const Text("Für den Admin: "), const Text("Exception caught in getSoapResponseTestSN"), Text(data["exception"].toString())];
+  }
   List<ItemEntry> items = buildentrys(data);
+  try {
   return buildCardsFromEntrys(items);
+  } catch(e) {
+    return [const Text("Etwas ist schieggelaufen.")];
+  }
 }
 
 Color? getColorForAvailability(availability) {
@@ -181,9 +227,10 @@ class ResultCard extends StatelessWidget {
   final String link;
   final String mpn;
   final String ean;
+  final int qty;
   final String small_image_link;
 
-  ResultCard({ Key? key, this.name = "", this.condition = "",this.saleprice = -1, this.link = "", this.ean = "", this.mpn = "", this.small_image_link = ""}) : super();
+  ResultCard({ Key? key, this.name = "", this.condition = "",this.saleprice = -1, this.link = "", this.ean = "", this.mpn = "", this.small_image_link = "", this.qty = 0}) : super();
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
@@ -200,11 +247,7 @@ class ResultCard extends StatelessWidget {
             title: const Text("Hidden Info"),
             content: Column(
               children : [
-                FadeInImage.memoryNetwork(
-                  placeholder: kTransparentImage,
-                  image : small_image_link
-                  ),
-
+               
                 Text("MPN : $mpn", style: TextStyle(fontSize:(kIsWeb ? MediaQuery.of(context).size.height / 100: MediaQuery.of(context).size.width) / 50)),
                 Text("EAN: $ean", style: TextStyle(fontSize:(kIsWeb ? MediaQuery.of(context).size.height / 100: MediaQuery.of(context).size.width) / 50)),
                 ]
@@ -219,7 +262,7 @@ class ResultCard extends StatelessWidget {
       elevation: 0.0,
       color: Colors.white,
       child: Padding(
-        padding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),
+        padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),
         child: Row(
           children: [
             Expanded(
@@ -237,7 +280,7 @@ class ResultCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(name, style: TextStyle(fontSize: 20.0),),
+                Text(name, style: const TextStyle(fontSize: 20.0)),
                 SizedBox(height: (kIsWeb ? MediaQuery.of(context).size.height / 50: MediaQuery.of(context).size.width) / 50),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -251,6 +294,7 @@ class ResultCard extends StatelessWidget {
                           children: [
                             Icon(Icons.info, color: Colors.grey[800]),
                             Text(condition),
+                            Text("QTY: $qty")
                           ],
                         ),
                        
